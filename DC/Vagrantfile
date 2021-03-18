@@ -1,79 +1,73 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
+Vagrant.require_version ">= 2.2.3"
+
+# variables:
+# - box name to be used
+# - virtual machine name and hostname
+# - linked_clone usage (https://www.vagrantup.com/docs/virtualbox/configuration.html#linked-clones)
+
+box_name     = "SubPointSolutions/win-2016-datacenter-app"
+vm_dc        = "dc"
+linked_clone = false
+
+# uplift helper for vagrant configurations
+uplift = VagrantPlugins::Uplift::Config()
+
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+  
+  config.vm.define(vm_dc) do | vm_config |      
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "SubPointSolutions/win-2016-datacenter-app"
+    # -- UPLIFT CONFIG START --
+    # there should not be a need to modify core uplift configration
+    # avoid making changes to it, add your own provision at the end
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+    vm_config.vm.box = box_name
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine and only allow access
-  # via 127.0.0.1 to disable public access
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  Write-Host "hostname..."
-  hostname
-  Write-Host "Win32_OperatingSystem info..."
-  get-wmiobject -class Win32_OperatingSystem 
-  Write-Host "Win32_Product info..."
-  Get-WmiObject Win32_Product `
-    | Sort-Object -Property Name `
-    | Format-Table IdentifyingNumber, Name, LocalPackage -AutoSize
+    # standard config
+    uplift.set_default_synced_folder(vm_dc, vm_config)
+    uplift.set_2Gb(vm_dc, vm_config)
+    uplift.set_hostname(vm_dc, vm_config, vm_dc)
     
-  SHELL
+    # always setup correct networking
+    uplift.set_private_dc_network(vm_dc, vm_config)
+    
+    # uplift baseline
+    if !uplift.has_checkpoint?(vm_dc, 'dsc-soe') 
+      uplift.provision_win16_dsc_soe(vm_dc, vm_config)
+      vm_config.vm.provision :uplift_checkpoint, name: 'dsc-soe'
+    end
+
+    # uplift dc creation
+    if !uplift.has_checkpoint?(vm_dc, 'dc-creation') 
+      uplift.provision_dc16(vm_dc, vm_config)
+      vm_config.vm.provision :uplift_checkpoint, name: 'dc-creation'
+    end
+
+    # common shortcuts on the desktop
+    if !uplift.has_checkpoint?(vm_dc, 'dsc-shortcuts') 
+      uplift.provision_win16_dsc_shortcuts(vm_dc, vm_config)
+      vm_config.vm.provision :uplift_checkpoint, name: 'dsc-shortcuts'
+    end
+
+    # additional virtualbox tweaks
+    vm_config.vm.provider "virtualbox" do |v|
+      v.gui  = false
+     
+      v.cpus   = uplift.get_vm_cpus(vm_dc, 4)
+      v.memory = uplift.get_vm_memory(vm_dc, 2 * 1024)
+
+      v.customize ['modifyvm', :id, '--cpuexecutioncap', '100'] 
+      v.customize ["modifyvm", :id, "--ioapic", "on"]
+
+      v.linked_clone = linked_clone
+    end
+
+    # -- UPLIFT CONFIG END --
+    
+    # add your custom vagrant configuration here
+
+  end  
+
 end
