@@ -1,0 +1,1 @@
+{"dependencies":[["vagrant-reload",["= 0.0.1"]],["vagrant-uplift",["= 0.2.1902.49"]],["vagrant-windows-sysprep",["= 0.0.9"]]],"checksum":"ddc0b7407c7c600ca20bcac6b61d373d17ed3b11abcb6914708cd2abff942ff4","vagrant_version":"2.2.14"}
