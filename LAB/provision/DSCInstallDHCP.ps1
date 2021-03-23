@@ -2,7 +2,7 @@ Configuration xDhcpsServerScope_NewScope
 {
     Import-DscResource -ModuleName xDHCpServer
     #Define NIC IP
-    # $IP = Get-NetIPAddress -InterfaceAlias "Ethernet 2" | Where-Object {$_.IPAddress -notlike "*:*" } | select -ExpandProperty IPAddress
+    $IP = Get-NetIPAddress -InterfaceAlias "Ethernet 2" | Where-Object {$_.IPAddress -notlike "*:*" } | select -ExpandProperty IPAddress
 
     Node 'localhost'
     {
@@ -21,8 +21,8 @@ Configuration xDhcpsServerScope_NewScope
         xDhcpServerAuthorization RemoteServerActivation
         {
             Ensure = 'Present'
-            DnsName = 'lab-dc1' + '.party.hard'
-            IPAddress = '192.168.11.2'
+            DnsName = $env:COMPUTERNAME + '.party.hard'
+            IPAddress = $IP
         }       
                   
         
