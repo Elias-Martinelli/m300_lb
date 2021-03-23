@@ -18,7 +18,7 @@ Configuration xDhcpsServerScope_NewScope
             Ensure = 'Present'
         }
                 
-        xDhcpServerAuthorization RemoteServerActivation
+        xDhcpServerAuthorization 'RemoteServerActivation'
         {
             Ensure = 'Present'
             DnsName = $env:COMPUTERNAME + '.party.hard'
@@ -26,7 +26,7 @@ Configuration xDhcpsServerScope_NewScope
         }       
                   
         
-        xDhcpServerScope Scope
+        xDhcpServerScope 'Scope'
         {
             ScopeId = '192.168.11.0'
             Ensure = 'Present'

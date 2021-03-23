@@ -12,7 +12,7 @@ Configuration JoinDomainConfiguration
 
     Node 'localhost'
     {
-        Computer JoinDomain
+        Computer 'JoinDomain'
         {
             Name       = $env:COMPUTERNAME
             DomainName = 'PARTY'
