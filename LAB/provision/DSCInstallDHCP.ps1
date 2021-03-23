@@ -4,7 +4,7 @@ Configuration xDhcpsServerScope_NewScope
     Import-DscResource -moduleName 'xDhcpServer'
 
     #Define NIC IP
-    $IP = Get-NetIPAddress -InterfaceAlias "Ethernet 2" | Where-Object {$_.IPAddress -notlike "*:*" } | select -ExpandProperty IPAddress
+    # $IP = Get-NetIPAddress -InterfaceAlias "Ethernet 2" | Where-Object {$_.IPAddress -notlike "*:*" } | select -ExpandProperty IPAddress
 
     Node 'localhost'
     {
@@ -24,8 +24,8 @@ Configuration xDhcpsServerScope_NewScope
         {
             IsSingleInstance = 'Yes'
             Ensure = 'Present'
-            DnsName = $env:COMPUTERNAME + '.party.hard'
-            IPAddress = $IP
+            DnsName = 'lab-dc1.party.hard'
+            IPAddress = '192.168.11.2'
         }       
                   
         
@@ -51,6 +51,39 @@ Configuration xDhcpsServerScope_NewScope
         #    AddressFamily = 'IPv4'
         #    Router = '192.168.11.1'
         #}
+        
+        # Setting scope gateway
+        DhcpScopeOptionValue 'ScopeOptionGateway'
+        {
+            OptionId      = 3
+            Value         = '192.168.11.2'
+            ScopeId       = '192.168.11.0'
+            VendorClass   = ''
+            UserClass     = ''
+            AddressFamily = 'IPv4'
+        }
+
+        # Setting scope DNS servers
+        DhcpScopeOptionValue 'ScopeOptionDNS'
+        {
+            OptionId      = 6
+            Value         = @('192.168.11.2')
+            ScopeId       = '192.168.11.0'
+            VendorClass   = ''
+            UserClass     = ''
+            AddressFamily = 'IPv4'
+        }
+
+        # Setting scope DNS domain name
+        DhcpScopeOptionValue 'ScopeOptionDNSDomainName'
+        {
+            OptionId      = 15
+            Value         = 'party.hard'
+            ScopeId       = '192.168.11.0'
+            VendorClass   = ''
+            UserClass     = ''
+            AddressFamily = 'IPv4'
+        }
     }
 }
 
