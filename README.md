@@ -88,14 +88,14 @@ Konfiguration:
 
 ## 4. Funktionalität
 Welche Funktionalität erwarten wir von unserer Testumgebung?
-Wir haben wei Hosts im lokalen Netzwerk 192.168.11.0/24. Einer ist der Domänencontroller PARTY.HARD, der andere ist Mitglied dieser Domäne.
+Wir haben wei Hosts im lokalen Netzwerk `192.168.11.0/24`. Einer ist der Domänencontroller `PARTY.HARD`, der andere ist Mitglied dieser Domäne.
 
-LAB-DC1 — 192.168.11.2
+LAB-DC1 — `192.168.11.2`
 - Active Directory Domain Services
 - PARTY.HARD Domänenkonfiguration.
 - DHCP
 
-LAB-TEST — 192.168.11.10 (IP zugewiesen von DHCP)
+LAB-TEST — `192.168.11.10` (IP zugewiesen von DHCP)
 - PARTY.HARD Domänenmitglied
 
 ## 5. Sicherheitsaspekte
