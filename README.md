@@ -6,14 +6,16 @@
   - [1. Einführung](#1-einführung)
     - [1.1 Netzwerkplan](#11-netzwerkplan)
   - [2. Installation](#2-installation)
-    - [1.1 Voraussetzungen](#11-voraussetzungen)
-    - [1.1 Respository Klonen](#11-respository-klonen)
-    - [2.2 Domänen Controller erstellen](#22-domänen-controller-erstellen)
-    - [2.3 Windows Testserver erstellen](#23-windows-testserver-erstellen)
-  - [3. Sicherheitsaspekte](#3-sicherheitsaspekte)
-  - [4. PowerShell Scripts](#4-powershell-scripts)
-  - [5. Testing](#5-testing)
-  - [6. Quellenangabe](#6-quellenangabe)
+    - [2.1 Voraussetzungen](#21-voraussetzungen)
+    - [2.2 Respository Klonen](#22-respository-klonen)
+    - [2.3 Domänen Controller erstellen](#23-domänen-controller-erstellen)
+    - [2.4 Windows Testserver erstellen](#24-windows-testserver-erstellen)
+  - [3. DHCP Service](#3-dhcp-service)
+  - [4. Funktionalität](#4-funktionalität)
+  - [5. Sicherheitsaspekte](#5-sicherheitsaspekte)
+  - [6. PowerShell Scripts](#6-powershell-scripts)
+  - [7. Testing](#7-testing)
+  - [8. Quellenangabe](#8-quellenangabe)
 
 ## 1. Einführung
 
@@ -29,11 +31,18 @@ Wir verwenden hierfür die Tools Vagrant und Virtualbox.
 ## 2. Installation
 
 
-### 1.1 Voraussetzungen
+### 2.1 Voraussetzungen
 
+- Windows 7+ / Windows server 2003+
+- Powershell v2+
+- .NET Framework 4+
 
+Für die Automatische Installation, öffnen Sie `cmd.exe` als Administrator und fügen Sie den folgenden Befehl ein.
+```bash
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" && choco install -y vagrant & choco install -y virtualbox
+```
 
-### 1.1 Respository Klonen
+### 2.2 Respository Klonen
 ```bash
 git clone https://github.com/FailForImprove/m300_lb
 ```
@@ -48,7 +57,7 @@ Um die Boxen zu bauen, verwenden Sie `vagrant up`.
 Jede Box wird zweimal neu gestartet, bis alle Funktionen ausgeführt werden..
 
 
-### 2.2 Domänen Controller erstellen
+### 2.3 Domänen Controller erstellen
 Zuerst erstellen wir den Domänen Controller mit DHCP Service.
 
 ```bash
@@ -58,7 +67,7 @@ vagrant up lab-dc1
 Danach läuft die Domäne `party.hard` und läuft unter der IP Adresse `192.168.11.2`.
 
 
-### 2.3 Windows Testserver erstellen
+### 2.4 Windows Testserver erstellen
 
 ```bash
 vagrant up lab-test
@@ -68,13 +77,34 @@ vagrant up lab-test
 
 Client sollte der Domäne `party.hard` beigetreten sein und vom DHCP die IP Adresse `192.168.11.10` erhalten.
 
-## 3. Sicherheitsaspekte
+## 3. DHCP Service
+Der DHCP Serice auf dem Domänencontroller läuft über die UDP-Ports 67 und 68. Er gibt dem Testserver die DNS noch mit, damit dieser dann auch der Domäne kann beitreten.
+
+Konfiguration:
+- DHCP Range: `192.168.11.10-254`
+- DNS: `192.168.11.2`
+- Gateway: `192.168.11.2`
+- Lease Time: 8 Stunden
+
+## 4. Funktionalität
+Welche Funktionalität erwarten wir von unserer Testumgebung?
+Wir haben wei Hosts im lokalen Netzwerk 192.168.11.0/24. Einer ist der Domänencontroller PARTY.HARD, der andere ist Mitglied dieser Domäne.
+
+LAB-DC1 — 192.168.11.2
+- Active Directory Domain Services
+- PARTY.HARD Domänenkonfiguration.
+- DHCP
+
+LAB-TEST — 192.168.11.10 (IP zugewiesen von DHCP)
+- PARTY.HARD Domänenmitglied
+
+## 5. Sicherheitsaspekte
 
 Hostonly Netzwerk für ein geschlossenes Testsystem. Dies ist besonders wichtig, da wir ein DHCP Service auf dem Domänen Controller im Einsatz haben.
 
 ---
 
-## 4. PowerShell Scripts
+## 6. PowerShell Scripts
 
 All Scripts are located in Folder [`m300_lb/lb2/scripts`](https://gitlab.com/KakaoSchluerfer/m300_lb/-/blob/master/lb2/scripts/)
 
@@ -88,7 +118,7 @@ All Scripts are located in Folder [`m300_lb/lb2/scripts`](https://gitlab.com/Kak
 
 ---
 
-## 5. Testing
+## 7. Testing
 Kontrolle ADUC-Snap-In. Eine Domäne ist vorhanden und Mitgliederhosts befinden sich in den entsprechenden Organisationseinheiten:
 <p>
   <img width="500" src="Testing/Test_1.png">
@@ -105,7 +135,7 @@ In der Liste der geleasten Adressen sehen wir unsere zweite VM.
 </p>
 
 
-## 6. Quellenangabe
+## 8. Quellenangabe
 
 - https://vagrantup.com/docs
 - https://medium.com/subpointsolutions/building-a-disposable-windows-2016-domain-controller-in-20-minutes-with-vagrant-fce6eb4e01bd
