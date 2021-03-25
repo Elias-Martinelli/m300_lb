@@ -1,7 +1,7 @@
-# m300_lb
+# Active Direcotry Lab mit DHCP | M300, LB2, ST18D
 
 ## Inhaltsverzeichnis
-- [m300_lb](#m300_lb)
+- [Active Direcotry Lab mit DHCP | M300, LB2, ST18D](#active-direcotry-lab-mit-dhcp--m300-lb2-st18d)
   - [Inhaltsverzeichnis](#inhaltsverzeichnis)
   - [1. Einführung](#1-einführung)
     - [1.1 Netzwerkplan](#11-netzwerkplan)
@@ -84,8 +84,7 @@ All Scripts are located in Folder [`m300_lb/lb2/scripts`](https://gitlab.com/Kak
 |[`ConfigureRebootOnNode.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/ConfigureRebootOnNode.ps1)|Konfiguriert bei Bedarf den Neustart des Hosts|``lab-test``|
 |[`DSCInstallDHCP.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/DSCInstallDHCP.ps1)|Installieren Sie die DHCP-Rolle, RSAT-DHCP-Komponente, autorisieren Sie den DHCP-Server in AD nach der Installation und konfigurieren Sie den Bereich.|`lab-dc1`|
 |[`DSCInstallDomain.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/DSCInstallDomain.ps1)|Installieren Sie die AD DS-Rolle, die RSAT-ADDS-Komponente, und konfigurieren Sie die "PARTY.HARD" Domäne.|`lab-dc1`|
-|[`SCJoinDomain.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/SCJoinDomain.ps1)|
-Host zur Active Directory-Domäne hinzufügen.|`lab-test`|
+|[`SCJoinDomain.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/SCJoinDomain.ps1)|Host zur Active Directory-Domäne hinzufügen.|`lab-test`|
 |[`PreDSCInstall.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/PreDSCInstall.ps1)|Installation erforderlich für Arbeit DSC-Module.|`lab-dc1` / `lab-test`|
 
 ---
