@@ -12,7 +12,8 @@
     - [2.3 Windows Testserver erstellen](#23-windows-testserver-erstellen)
   - [3. Sicherheitsaspekte](#3-sicherheitsaspekte)
   - [4. PowerShell Scripts](#4-powershell-scripts)
-  - [9. Quellenangabe](#9-quellenangabe)
+  - [5. Testing](#5-testing)
+  - [6. Quellenangabe](#6-quellenangabe)
 
   - [9. Quellenangabe](#9-quellenangabe)
 
@@ -89,11 +90,24 @@ All Scripts are located in Folder [`m300_lb/lb2/scripts`](https://gitlab.com/Kak
 
 ---
 
+## 5. Testing
+Kontrolle ADUC-Snap-In. Eine Domäne ist vorhanden und Mitgliederhosts befinden sich in den entsprechenden Organisationseinheiten:
+<p>
+  <img width="500" src="Testing/Test_1.png">
+</p>
+
+Es scheint, dass es auch keine Probleme mit DHCP gab. Wir können sehen, dass der Bereich hinzugefügt wurde.
+<p>
+  <img width="500" src="Testing/Test_2.png">
+</p>
+
+In der Liste der geleasten Adressen sehen wir unsere zweite VM.
+<p>
+  <img width="500" src="Testing/Test_3.png">
+</p>
 
 
-
-
-## 9. Quellenangabe
+## 6. Quellenangabe
 
 - https://vagrantup.com/docs
 - https://medium.com/subpointsolutions/building-a-disposable-windows-2016-domain-controller-in-20-minutes-with-vagrant-fce6eb4e01bd
