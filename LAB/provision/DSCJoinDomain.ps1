@@ -1,43 +1,22 @@
-Configuration JoinDomainConfiguration
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullorEmpty()]
-        [System.Management.Automation.PSCredential]
-        $Credential
-    )
+Write-Host 'Join the domain'
 
-    Import-DscResource -Module ComputerManagementDsc
+Start-Sleep -m 2000
 
-    Node 'localhost'
-    {
-        Computer 'JoinDomain'
-        {
-            Name       = $env:COMPUTERNAME
-            DomainName = 'PARTY'
-            Credential = $Credential # Credential to join to domain
-        }
-    }
-}
+Write-Host "First, set DNS to DC to join the domain"
+$newDNSServers = "192.168.11.2"
+$adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.IPAddress -match "192.168.11."}
+$adapters | ForEach-Object {$_.SetDNSServerSearchOrder($newDNSServers)}
 
+Start-Sleep -m 2000
 
-#Next block is using to allow password as plain text
-$cd = @{
-    AllNodes = @(
-        @{
-            NodeName = 'localhost'
-            PSDscAllowPlainTextPassword = $true
-         }
-    )
-}
+Write-Host "Now join the domain"
 
-#Define user and password for ADDomain deployment (also used for restore).
-$password = ConvertTo-SecureString "vagrant" -AsPlainText -Force
-$cred = New-Object System.Management.Automation.PSCredential('party.hard\vagrant',$password)
+$user = "party.hard\vagrant"
+$pass = ConvertTo-SecureString "vagrant" -AsPlainText -Force
+$DomainCred = New-Object System.Management.Automation.PSCredential $user, $pass
+Add-Computer -DomainName "party.hard" -credential $DomainCred -PassThru
 
-#Create MOF
-JoinDomainConfiguration -Credential $cred -ConfigurationData $cd
-
-#Execute MOF
-Start-DscConfiguration -Path .\JoinDomainConfiguration -Force -Wait -Verbose
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -Value 1
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Value "vagrant"
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -Value "vagrant"
+#Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Value "WINDOMAIN"
