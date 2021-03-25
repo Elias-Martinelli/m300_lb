@@ -15,8 +15,6 @@
   - [5. Testing](#5-testing)
   - [6. Quellenangabe](#6-quellenangabe)
 
-  - [9. Quellenangabe](#9-quellenangabe)
-
 ## 1. Einführung
 
 Dieses Projekt wurde für die LB2 M300 entwickelt, mit dem Ziel eine Active Directory Testumgebung umzusetzen auf Basis von "Infrastructure as Code". 
