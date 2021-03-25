@@ -11,6 +11,7 @@
     - [2.2 Domänen Controller erstellen](#22-domänen-controller-erstellen)
     - [2.3 Windows Testserver erstellen](#23-windows-testserver-erstellen)
   - [3. Sicherheitsaspekte](#3-sicherheitsaspekte)
+  - [4. PowerShell Scripts](#4-powershell-scripts)
   - [9. Quellenangabe](#9-quellenangabe)
 
   - [9. Quellenangabe](#9-quellenangabe)
@@ -71,6 +72,27 @@ Client sollte der Domäne `party.hard` beigetreten sein und vom DHCP die IP Adre
 ## 3. Sicherheitsaspekte
 
 Hostonly Netzwerk für ein geschlossenes Testsystem. Dies ist besonders wichtig, da wir ein DHCP Service auf dem Domänen Controller im Einsatz haben.
+
+---
+
+## 4. PowerShell Scripts
+
+All Scripts are located in Folder [`m300_lb/lb2/scripts`](https://gitlab.com/KakaoSchluerfer/m300_lb/-/blob/master/lb2/scripts/)
+
+|Funktion|Beschreibung|Anwendung|
+|:--|:--|--:|
+|[`ConfigureRebootOnNode.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/ConfigureRebootOnNode.ps1)|Konfiguriert bei Bedarf den Neustart des Hosts|``lab-test``|
+|[`DSCInstallDHCP.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/DSCInstallDHCP.ps1)|Installieren Sie die DHCP-Rolle, RSAT-DHCP-Komponente, autorisieren Sie den DHCP-Server in AD nach der Installation und konfigurieren Sie den Bereich.|`lab-dc1`|
+|[`DSCInstallDomain.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/DSCInstallDomain.ps1)|Installieren Sie die AD DS-Rolle, die RSAT-ADDS-Komponente, und konfigurieren Sie die "PARTY.HARD" Domäne.|`lab-dc1`|
+|[`SCJoinDomain.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/SCJoinDomain.ps1)|
+Host zur Active Directory-Domäne hinzufügen.|`lab-test`|
+|[`PreDSCInstall.ps1`](https://github.com/FailForImprove/m300_lb/blob/main/LAB/provision/PreDSCInstall.ps1)|Installation erforderlich für Arbeit DSC-Module.|`lab-dc1` / `lab-test`|
+
+---
+
+
+
+
 
 ## 9. Quellenangabe
 
