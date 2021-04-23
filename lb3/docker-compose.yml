@@ -1,6 +1,7 @@
 version: "3.9"
     
 services:
+  # MySQL Database
   db:
     image: mysql:5.7
     volumes:
@@ -11,7 +12,24 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
-    
+    networks: 
+     - wpsite
+
+  # phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: somewordpress 
+    networks:
+      - wpsite
+
+  # Wordpresss
   wordpress:
     depends_on:
       - db
@@ -19,10 +37,16 @@ services:
     ports:
       - "8000:80"
     restart: always
+    volumes: ["./:/var/www./html"]
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
+    networks: 
+      - wpsite
+networks: 
+  wpsite:   
 volumes:
   db_data: {}
+    
