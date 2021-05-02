@@ -11,6 +11,7 @@
     - [2.2 Respository Klonen](#22-respository-klonen)
     - [2.3 Container starten](#23-container-starten)
     - [3.0 Funktionalität](#30-funktionalität)
+    - [4.0 Testing](#40-testing)
   - [8. Quellenangabe](#8-quellenangabe)
 
 ## 1. Einführung
@@ -56,6 +57,7 @@ git clone https://github.com/FailForImprove/m300_lb/lb3
 
 Welche Funktionalität erwarten wir von unserer Testumgebung? Wir haben jeweils 3 parralel laufende Containr.
 Dabei übernimmt die nginx Maschine das Hosting des WordPress, MySQL Maschine läuft das WordPress und PHP Maschine ist die Datenbank.
+Dabei findet sich bei unserem Respository das File Wordpress und kann somit beliebig angepasst werden.
 
 **FRONTEND:**
 Rufen Sie die Webseite mit `localhost` oder `lb3.test` auf, um die Webseite anzusehen.
@@ -70,6 +72,38 @@ http://lb3.test/wp-login.php
 - Username: lb3_admin
 - Passwort: Start?19
 
+
+### 4.0 Testing
+
+**Testcase 1**
+SOLL Ergebnis:
+- Beim aufrufen von der URL `lb3.test` sollte eine WP Default-Webseite erscheinen
+IST Ergebnis:
+- WP Default-Webseite erscheint 
+<p>
+  <img width="650" src="Testcases/nonSSL.png">
+</p>
+Status:
+- Erfolgreich
+
+**Testcase 2**
+SOLL Ergebnis:
+- Beim ändern der WP Webseite oder ergänzen von Plugins wird alles abgespeichert und geht nicht verloren 
+IST Ergebnis:
+- Nach `docker compose down` und `docker compose -up` findet kein Datenverlust statt
+Status:
+- Erfolgreich
+
+**Testcase 3**
+SOLL Ergebnis:
+- Beim aufrufen von der URL `https://lb3.test` sollte eine WP Default-Webseite erscheinen
+IST Ergebnis:
+- Error 443
+<p>
+  <img width="650" src="Testcases/SSL.png">
+</p>
+Status:
+- Erfolgreich
 
 ## 8. Quellenangabe
 
