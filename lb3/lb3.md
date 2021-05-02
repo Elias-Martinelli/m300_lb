@@ -62,13 +62,11 @@ Dabei findet sich bei unserem Respository das File Wordpress und kann somit beli
 **FRONTEND:**
 Rufen Sie die Webseite mit `localhost` oder `lb3.test` auf, um die Webseite anzusehen.
 
-ODER
-
 **BACKEND:**
 Rufen Sie das Backend auf, um Plugins/Themes hinzufügen oder ihre Seite bearbeiten. :
 http://lb3.test/wp-login.php
 
-**Logindaten:**
+**LOGINDATEN:**
 - Username: lb3_admin
 - Passwort: Start?19
 
@@ -105,7 +103,7 @@ IST Ergebnis:
 Status:
 - Erfolgreich
 
-## 8. Quellenangabe
+## 5. Quellenangabe
 
 - https://hub.docker.com/_/wordpress
 - https://docs.docker.com/engine/
