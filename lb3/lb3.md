@@ -4,7 +4,13 @@
 - [LB3 - Wordpress mit Reverse Proxy Webentwicklung Umgebung](#lb3---wordpress-mit-reverse-proxy-webentwicklung-umgebung)
   - [Inhaltsverzeichnis](#inhaltsverzeichnis)
   - [1. Einführung](#1-einführung)
+    - [1.1 Netzwerkplan](#11-netzwerkplan)
   - [2. Installation](#2-installation)
+    - [2.1 Voraussetzungen](#21-voraussetzungen)
+      - [2.1.1 Hostdatei ändern](#211-hostdatei-ändern)
+    - [2.2 Respository Klonen](#22-respository-klonen)
+    - [2.3 Container starten](#23-container-starten)
+    - [3.0 Funktionalität](#30-funktionalität)
   - [8. Quellenangabe](#8-quellenangabe)
 
 ## 1. Einführung
@@ -13,6 +19,11 @@ Die produktive Webentwicklung Umgebung besitzt eine MySQL Datenbank und ein Word
 
 Wir verwenden hierfür die Tools Docker. 
 
+### 1.1 Netzwerkplan
+Diese Illustration zeigt eine Multi-Container Deployment für Wordpress mit Docker:
+<p>
+  <img width="650" src="Netzwerkplan/lb3_netzwerkplan.png">
+</p>
 
 ## 2. Installation
 
@@ -22,23 +33,42 @@ Wir verwenden hierfür die Tools Docker.
 - Powershell v2+
 - .NET Framework 4+
 
-
-Installation neuste Version von Tool Docker
-
-
-Für die Automatische Installation, öffnen Sie `cmd.exe` als Administrator und fügen Sie den folgenden Befehl ein.
-```bash
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" && choco install -y vagrant & choco install -y virtualbox
-```
-
-
+#### 2.1.1 Hostdatei ändern
+- Hostfile ändern
+- Suchen Sie im Startmenü den Eintrag „Editor“ und rechtsklicken Sie darauf. Wählen Sie „Als Administrator ausführen“.
+- Gehen Sie im Editor unter „Datei“ auf den Menüpunkt „Öffnen“.
+- Öffnen Sie die „hosts“-Datei im Windows Explorer über den Pfad C:\Windows\ System32\drivers\etc\hosts.
+- Sie können die hosts-Datei nun ändern.
+- fügen Sie `127.0.0.1 lb3.test` hinzu
 
 ### 2.2 Respository Klonen
 ```bash
 git clone https://github.com/FailForImprove/m300_lb/lb3
 ```
 
-Um die Boxen zu bauen, verwenden Sie `vagrant up`.
+### 2.3 Container starten
+
+- beim Respository in den Folder `lb3`
+
+- Um die Boxen zu bauen, verwenden Sie `docker compose -d --build`.
+
+### 3.0 Funktionalität
+
+Welche Funktionalität erwarten wir von unserer Testumgebung? Wir haben jeweils 3 parralel laufende Containr.
+Dabei übernimmt die nginx Maschine das Hosting des WordPress, MySQL Maschine läuft das WordPress und PHP Maschine ist die Datenbank.
+
+**FRONTEND:**
+Rufen Sie die Webseite mit `localhost` oder `lb3.test` auf, um die Webseite anzusehen.
+
+ODER
+
+**BACKEND:**
+Rufen Sie das Backend auf, um Plugins/Themes hinzufügen oder ihre Seite bearbeiten. :
+http://lb3.test/wp-login.php
+
+**Logindaten:**
+- Username: lb3_admin
+- Passwort: Start?19
 
 
 ## 8. Quellenangabe
